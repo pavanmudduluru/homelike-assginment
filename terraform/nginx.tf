@@ -16,7 +16,7 @@ resource "aws_autoscaling_group" "nginx_asg" {
   max_size             = 2
   health_check_type    = "ELB"
   launch_configuration = aws_launch_configuration.nginx_lc.name
-  vpc_zone_identifier = module.vpc_config.private_subnets_id
+  vpc_zone_identifier = module.vpc_config.public_subnets_id
   target_group_arns = [aws_alb_target_group.nginx_target_group.arn]
   lifecycle {
     create_before_destroy = true

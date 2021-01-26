@@ -1,0 +1,10 @@
+all:
+  hosts:
+    mail.example.com:
+  children:
+    webservers:
+      hosts:
+
+    appservers:
+      hosts:
+      

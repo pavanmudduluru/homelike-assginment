@@ -34,19 +34,19 @@ resource "aws_elb" "nodejs_elb" {
   security_groups = [ module.vpc_config.elb_sg ]
   subnets = module.vpc_config.public_subnets_id
   cross_zone_load_balancing = true
-  /*
+
   health_check {
-    healthy_threshold   = 5
+    healthy_threshold   = 10
     unhealthy_threshold = 2   
-    timeout             = 5    
+    timeout             = 5   
     interval            = 30 
     target = "HTTP:3000/"
   }
-  */
+
   listener {
     lb_port = 80
     lb_protocol = "http"
-    instance_port = "80"
+    instance_port = "3000"
     instance_protocol = "http"
   }
   tags = {    

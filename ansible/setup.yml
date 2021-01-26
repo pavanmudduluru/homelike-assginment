@@ -1,0 +1,30 @@
+---
+- hosts: webservers
+  name: nginx
+  tasks:
+    - name: ensure nginx is at the latest version
+      apt: 
+        name: nginx
+        state: latest
+    - name: start nginx
+      service:
+          name: nginx
+          state: started
+
+- hosts: appservers
+  tasks:
+    - name: Node.js app | Install Node.js
+      apt:
+        name: nodejs
+        state: latest
+        update_cache: yes
+    - name: Node.js app | Install npm
+      apt:
+        name: npm
+        state: latest
+    - name: Create a sample application
+      template:
+        src: templates/app.js.j2
+        dest: /home/ubuntu/app.js
+    - name: Run node app
+      shell: node /home/ubuntu/app.js
