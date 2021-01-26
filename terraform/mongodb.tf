@@ -5,7 +5,8 @@ resource "aws_instance" "db1" {
   vpc_security_group_ids = [ module.vpc_config.mongodb_sg,module.vpc_config.ssh_sg ]
   subnet_id = module.vpc_config.private_subnets_id[0]
   tags = {
-    Name   = "DB1"
+    Name   = "DB1",
+    Tier = "dbserver"
   }
 }
 
@@ -21,7 +22,8 @@ resource "aws_instance" "db2" {
   vpc_security_group_ids = [ module.vpc_config.mongodb_sg,module.vpc_config.ssh_sg ]
   subnet_id = module.vpc_config.private_subnets_id[2]
   tags = {
-    Name   = "DB2"
+    Name   = "DB2",
+    Tier = "dbserver"
   }
 }
 
@@ -37,7 +39,8 @@ resource "aws_instance" "db3" {
   vpc_security_group_ids = [ module.vpc_config.mongodb_sg,module.vpc_config.ssh_sg ]
   subnet_id = module.vpc_config.private_subnets_id[2]
   tags = {
-    Name   = "DB3"
+    Name   = "DB3",
+    Tier = "dbserver"
   }
 }
 

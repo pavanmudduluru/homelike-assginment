@@ -21,11 +21,16 @@ resource "aws_autoscaling_group" "nodejs_asg" {
   lifecycle {
     create_before_destroy = true
   }
-  tag {
+  tags = [ {
     key = "Name"
     value = "${var.frontend}-server"
     propagate_at_launch = true
-  }
+  },
+  {
+    key = "Tier"
+    value = "appserver"
+    propagate_at_launch = true
+  } ]
 }
 
 resource "aws_elb" "nodejs_elb" {

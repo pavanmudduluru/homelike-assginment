@@ -21,11 +21,16 @@ resource "aws_autoscaling_group" "nginx_asg" {
   lifecycle {
     create_before_destroy = true
   }
-  tag {
+  tags = [{
     key = "Name"
     value = "${var.webserver}-server"
     propagate_at_launch = true
-  }
+  },
+  {
+    key = "Tier"
+    value = "webserver"
+    propagate_at_launch = true
+  } ]
 
 }
 
