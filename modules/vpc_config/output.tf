@@ -10,9 +10,11 @@ output "private_subnets_id" {
   value = aws_subnet.private_subnet.*.id
 }
 
+/*
 output "default_sg" {
   value = aws_security_group.default.id
 }
+*/
 
 output "nginx_sg" {
   value = aws_security_group.nginx.id
@@ -32,4 +34,8 @@ output "elb_sg" {
 
 output "ssh_sg" {
   value = aws_security_group.ssh.id
+}
+
+output "mongodb_sg" {
+  value = aws_security_group.mongodb.id
 }

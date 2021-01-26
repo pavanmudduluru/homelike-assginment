@@ -11,13 +11,17 @@ variable "vpc_cidr" {
   description = "The CIDR block of the vpc"
 }
 
-#Nginx Configuration
-variable "alb_name" {
-  description = "Name of the ALB"
+variable "key_name" {
+  description = "Name of the Key for servers"
 }
 
-variable "target_group_name" {
-  description = "Target Group Name"
+#Nginx Configuration
+variable "frontend" {
+  description = "Name of the frontend service"
+}
+
+variable "webserver" {
+  description = "Nginx"
 }
 
 variable "svc_port" {
@@ -38,9 +42,4 @@ variable "alb_listener_port" {
 
 variable "alb_listener_protocol" {
   description = "Listener protocol"
-}
-
-#NodeJS Configuration
-variable "elb_name" {
-  description = "Name of the Classical LB"
 }

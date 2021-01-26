@@ -1,4 +1,4 @@
-resource "aws_security_group" "default" {
+/*resource "aws_security_group" "default" {
   name        = "default"
   description = "Default security group to allow inbound/outbound from the VPC"
   vpc_id      = aws_vpc.vpc.id
@@ -19,6 +19,7 @@ resource "aws_security_group" "default" {
     Name = "default"
   }
 }
+*/
 
 resource "aws_security_group" "nginx" {
   name        = "nginx"
@@ -112,8 +113,8 @@ resource "aws_security_group" "ssh" {
   ingress {
     from_port   = 22
     to_port     = 22
-    protocol    = "ssh"
-    cidr_blocks = ["10.0.0.0/16"]
+    protocol    = "tcp"
+    cidr_blocks = ["49.206.32.92/32"]
   }
   egress {
     from_port       = 0
@@ -123,5 +124,28 @@ resource "aws_security_group" "ssh" {
   }
   tags = {
     Name = "ssh"
+  }
+}
+
+resource "aws_security_group" "mongodb" {
+  name        = "mongodb"
+  vpc_id = aws_vpc.vpc.id
+  depends_on  = [aws_vpc.vpc]
+  ingress {
+    from_port   = 27017
+    to_port     = 27017
+    protocol    = "tcp"
+    self = true
+    cidr_blocks = ["49.206.32.92/32"]
+    #security_groups = [aws_security_group.mongodb.id]
+  }
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "mongodb"
   }
 }

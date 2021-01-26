@@ -13,4 +13,4 @@ provider "aws" {
   profile = var.aws_profile
 }
 
-provider "mongodbatlas" {}
+#provider "mongodbatlas" {}
