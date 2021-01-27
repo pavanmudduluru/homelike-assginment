@@ -1,8 +1,3 @@
-##################################################################################
-#
-# Elastic IPs
-#
-##################################################################################
 resource "aws_eip" "mongo_1" {
 }
 
@@ -17,7 +12,6 @@ locals {
     "${aws_eip.mongo_1.public_ip}/32", 
     "${aws_eip.mongo_2.public_ip}/32",
     "${aws_eip.mongo_3.public_ip}/32",
-    "${aws_eip.mongo_arbiter.public_ip}/32"
   ]
 }
 
@@ -29,7 +23,7 @@ resource "aws_security_group" "mongodb" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = "${var.local_ip}/32"
+    cidr_blocks = ["${var.local_ip}/32"]
   }
 
   # allow 80 for letsencrypt (will be handled with firewalld)
@@ -80,7 +74,7 @@ resource "aws_security_group" "mongodb" {
   }
 }
 
-resource "aws_instance" "mongo" {
+resource "aws_instance" "mongo_1" {
   ami = var.mongo_ami
   instance_type = var.mongo_instance_type
   security_groups = [aws_security_group.mongodb.name]
@@ -92,4 +86,56 @@ resource "aws_instance" "mongo" {
     encrypted             = var.encrypt_mongo_volume
   }
   key_name = aws_key_pair.server_key.key_name
+  tags = {
+    Name = "mongo-1"
+  }
+}
+
+resource "aws_instance" "mongo_2" {
+  ami = var.mongo_ami
+  instance_type = var.mongo_instance_type
+  security_groups = [aws_security_group.mongodb.name]
+  ebs_block_device {
+    volume_size           = var.mongo_volume_size
+    volume_type           = "gp2"
+    delete_on_termination = true
+    device_name           = "/dev/sdb"
+    encrypted             = var.encrypt_mongo_volume
+  }
+  key_name = aws_key_pair.server_key.key_name
+  tags = {
+    Name = "mongo-2"
+  }
+}
+
+resource "aws_instance" "mongo_3" {
+  ami = var.mongo_ami
+  instance_type = var.mongo_instance_type
+  security_groups = [aws_security_group.mongodb.name]
+  ebs_block_device {
+    volume_size           = var.mongo_volume_size
+    volume_type           = "gp2"
+    delete_on_termination = true
+    device_name           = "/dev/sdb"
+    encrypted             = var.encrypt_mongo_volume
+  }
+  key_name = aws_key_pair.server_key.key_name
+  tags = {
+    Name = "mongo-3"
+  }
+}
+
+resource "aws_eip_association" "eip_assoc_mongo_1" {
+  instance_id   = aws_instance.mongo_1.id
+  allocation_id = aws_eip.mongo_1.id
+}
+
+resource "aws_eip_association" "eip_assoc_mongo_2" {
+  instance_id   = aws_instance.mongo_2.id
+  allocation_id = aws_eip.mongo_2.id
+}
+
+resource "aws_eip_association" "eip_assoc_mongo_3" {
+  instance_id   = aws_instance.mongo_3.id
+  allocation_id = aws_eip.mongo_3.id
 }
