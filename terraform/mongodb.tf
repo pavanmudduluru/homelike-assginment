@@ -1,50 +1,95 @@
-resource "aws_instance" "db1" {
-  ami = data.aws_ami.ubuntu.id
-  instance_type = var.mongodb_type
-  key_name = aws_key_pair.server_key.key_name
-  vpc_security_group_ids = [ module.vpc_config.mongodb_sg,module.vpc_config.mongo_app_sg ]
-  subnet_id = module.vpc_config.private_subnets_id[0]
-  user_data = base64encode(file("user-data/mongodb-user-data.sh"))
-  tags = {
-    Name   = "DB1"
+##################################################################################
+#
+# Elastic IPs
+#
+##################################################################################
+resource "aws_eip" "mongo_1" {
+}
+
+resource "aws_eip" "mongo_2" {
+}
+
+resource "aws_eip" "mongo_3" {
+}
+
+locals {
+  trusted_mongo = [
+    "${aws_eip.mongo_1.public_ip}/32", 
+    "${aws_eip.mongo_2.public_ip}/32",
+    "${aws_eip.mongo_3.public_ip}/32",
+    "${aws_eip.mongo_arbiter.public_ip}/32"
+  ]
+}
+
+resource "aws_security_group" "mongodb" {
+  vpc_id = module.vpc_config.vpc_id
+
+  # allow all from Devops home
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = "${var.local_ip}/32"
+  }
+
+  # allow 80 for letsencrypt (will be handled with firewalld)
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # allow 443 for letsencrypt (will be handled with firewalld)
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # allow monitoring port from all members to all members
+  ingress {
+    from_port   = 42000
+    to_port     = 42005
+    protocol    = "tcp"
+    cidr_blocks = local.trusted_mongo
+  }
+
+  # allow monitoring server port from all members to all members
+  ingress {
+    from_port   = 8443
+    to_port     = 8443
+    protocol    = "tcp"
+    cidr_blocks = local.trusted_mongo
+  }
+
+  # allow 27017 from all members to all members
+  ingress {
+    from_port   = 27017
+    to_port     = 27017
+    protocol    = "tcp"
+    cidr_blocks = local.trusted_mongo
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
-resource "aws_eip" "eip_db1" {
-  instance = aws_instance.db1.id
-  vpc      = true
-}
-
-resource "aws_instance" "db2" {
-  ami = data.aws_ami.ubuntu.id
-  instance_type = var.mongodb_type
-  key_name = aws_key_pair.server_key.key_name
-  vpc_security_group_ids = [ module.vpc_config.mongodb_sg,vpc_config.mongo_app_sg ]
-  user_data = base64encode(file("user-data/mongodb-user-data.sh"))
-  subnet_id = module.vpc_config.private_subnets_id[2]
-  tags = {
-    Name   = "DB2"
+resource "aws_instance" "mongo" {
+  ami = var.mongo_ami
+  instance_type = var.mongo_instance_type
+  security_groups = [aws_security_group.mongodb.name]
+  ebs_block_device {
+    volume_size           = var.mongo_volume_size
+    volume_type           = "gp2"
+    delete_on_termination = true
+    device_name           = "/dev/sdb"
+    encrypted             = var.encrypt_mongo_volume
   }
-}
-
-resource "aws_eip" "eip_db2" {
-  instance = aws_instance.db2.id
-  vpc      = true
-}
-
-resource "aws_instance" "db3" {
-  ami = data.aws_ami.ubuntu.id
-  instance_type = var.mongodb_type
   key_name = aws_key_pair.server_key.key_name
-  vpc_security_group_ids = [ module.vpc_config.mongodb_sg,vpc_config.mongo_app_sg ]
-  user_data = base64encode(file("user-data/mongodb-user-data.sh"))
-  subnet_id = module.vpc_config.private_subnets_id[2]
-  tags = {
-    Name   = "DB3"
-  }
-}
-
-resource "aws_eip" "eip_db3" {
-  instance = aws_instance.db3.id
-  vpc      = true
 }

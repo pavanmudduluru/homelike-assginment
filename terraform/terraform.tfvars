@@ -16,6 +16,16 @@ alb_listener_protocol = "HTTP"
 key_name = "server"
 
 #### Instance Types #####
-nginx_type = "t2.micro"
-nodejs_type = "t2.micro"
-mongodb_type = "t2.nano"
+nginx_instance_type = "t2.micro"
+nodejs_instance_type = "t2.micro"
+
+#### Local IP #######
+local_ip = "49.206.32.92"
+
+##### MongoDB Details ######
+mongo_ami = "ami-096b8af6e7e8fb927"
+mongo_instance_type = "t3a.medium"
+mongo_arbiter_instance_type = "t3a.medium"
+mongo_volume_size = 30
+mongo_arbiter_volume_size = 30
+encrypt_mongo_volume = "false"

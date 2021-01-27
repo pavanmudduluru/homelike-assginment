@@ -55,3 +55,31 @@ variable "alb_listener_port" {
 variable "alb_listener_protocol" {
   description = "Listener protocol"
 }
+
+variable "local_ip" {
+  description = "Local Machine IP"
+}
+
+variable "mongo_ami" {
+  description = "The AMI to use. Be Carreful. Only Ubuntu 18.04 has been tested"
+}
+
+variable "mongo_instance_type" {
+  description = "Type of instance to use for mongodb nodes"
+}
+
+variable "mongo_arbiter_instance_type" {
+  description = "Type of instance to use for mongodb arbiter node"
+}
+
+variable "mongo_volume_size" {
+  description = "Size in GB of the mongodb volume"
+}
+
+variable "mongo_arbiter_volume_size" {
+  description = "Size in GB of the mongodb volume for arbiter"
+}
+
+variable "encrypt_mongo_volume" {
+  description = "Define whereas the mongodb volume needs to be encrypted. If true ansible deployment can skip 'encrypt-rest' plays"
+}

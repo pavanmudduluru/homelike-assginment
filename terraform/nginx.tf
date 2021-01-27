@@ -1,7 +1,7 @@
 resource "aws_launch_configuration" "nginx_lc" {
   name = "${var.webserver}-lc"
   image_id = data.aws_ami.ubuntu.id
-  instance_type = var.nginx_type
+  instance_type = var.nginx_instance_type
   security_groups = [ module.vpc_config.nginx_sg, module.vpc_config.ssh_sg ]
   #associate_public_ip_address = true
   user_data = base64encode(file("user-data/nginx-user-data.sh"))

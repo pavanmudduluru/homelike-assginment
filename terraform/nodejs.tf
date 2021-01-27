@@ -1,7 +1,7 @@
 resource "aws_launch_configuration" "nodejs_lc" {
   name = "${var.frontend}-lc"
   image_id = data.aws_ami.ubuntu.id
-  instance_type = var.nodejs_type
+  instance_type = var.nodejs_instance_type
   security_groups = [ module.vpc_config.nodejs_sg, module.vpc_config.ssh_sg ]
   #associate_public_ip_address = true
   key_name = aws_key_pair.server_key.key_name
