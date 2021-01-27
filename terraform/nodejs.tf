@@ -1,11 +1,11 @@
 resource "aws_launch_configuration" "nodejs_lc" {
   name = "${var.frontend}-lc"
   image_id = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
+  instance_type = var.nodejs_type
   security_groups = [ module.vpc_config.nodejs_sg, module.vpc_config.ssh_sg ]
   #associate_public_ip_address = true
   key_name = aws_key_pair.server_key.key_name
-  user_data = "${base64encode(file("user-data/nodejs-user-data.sh"))}"
+  user_data = base64encode(file("user-data/nodejs-user-data.sh"))
   lifecycle {
     create_before_destroy = true
   }
@@ -26,11 +26,6 @@ resource "aws_autoscaling_group" "nodejs_asg" {
     key = "Name"
     value = "${var.frontend}-server"
     propagate_at_launch = true
-  },
-  {
-    key = "Tier"
-    value = "appserver"
-    propagate_at_launch = true
   } ]
 }
 
@@ -38,7 +33,7 @@ resource "aws_elb" "nodejs_elb" {
   name = "${var.frontend}-elb"
   internal = false
   security_groups = [ module.vpc_config.elb_sg ]
-  subnets = module.vpc_config.public_subnets_id
+  subnets = module.vpc_config.private_subnets_id
   cross_zone_load_balancing = true
 
   health_check {

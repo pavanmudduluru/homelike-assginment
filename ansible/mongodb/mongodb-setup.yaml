@@ -1,0 +1,18 @@
+- hosts: localhost
+  tasks:
+    - name: Adding mongodb repo to sources list
+      shell: echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+
+    - name: Run the equivalent of "apt-get update" as a separate step
+      apt:
+        update_cache: yes
+
+    - name: Install latest version of "openjdk-6-jdk" ignoring "install-recommends"
+      apt:
+        name: mongodb-org
+        state: latest
+    
+    - name: Install latest version of "openjdk-6-jdk" ignoring "install-recommends"
+      service:
+        name: mongod
+        state: latest

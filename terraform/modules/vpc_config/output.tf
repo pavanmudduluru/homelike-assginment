@@ -39,3 +39,11 @@ output "ssh_sg" {
 output "mongodb_sg" {
   value = aws_security_group.mongodb.id
 }
+
+output "mongo_app_sg" {
+  value = aws_security_group.mongo_app.id
+}
+
+output "bastion_sg" {
+  value = aws_security_group.bastion.id
+}

@@ -6,6 +6,18 @@ variable "aws_profile" {
   description = "Defaut"
 }
 
+variable "nginx_type" {
+  description = "Nginx Instance type"
+}
+
+variable "nodejs_type" {
+  description = "nodejs Instance type"
+}
+
+variable "mongodb_type" {
+  description = "mongodb Instance type"
+}
+
 //Networking
 variable "vpc_cidr" {
   description = "The CIDR block of the vpc"
