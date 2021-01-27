@@ -5,8 +5,7 @@ resource "aws_instance" "db1" {
   vpc_security_group_ids = [ module.vpc_config.mongodb_sg,module.vpc_config.ssh_sg ]
   subnet_id = module.vpc_config.private_subnets_id[0]
   tags = {
-    Name   = "DB1",
-    Tier = "dbserver"
+    Name   = "DB1"
   }
 }
 
@@ -22,8 +21,7 @@ resource "aws_instance" "db2" {
   vpc_security_group_ids = [ module.vpc_config.mongodb_sg,module.vpc_config.ssh_sg ]
   subnet_id = module.vpc_config.private_subnets_id[2]
   tags = {
-    Name   = "DB2",
-    Tier = "dbserver"
+    Name   = "DB2"
   }
 }
 
@@ -39,8 +37,7 @@ resource "aws_instance" "db3" {
   vpc_security_group_ids = [ module.vpc_config.mongodb_sg,module.vpc_config.ssh_sg ]
   subnet_id = module.vpc_config.private_subnets_id[2]
   tags = {
-    Name   = "DB3",
-    Tier = "dbserver"
+    Name   = "DB3"
   }
 }
 
@@ -48,38 +45,3 @@ resource "aws_eip" "eip_db3" {
   instance = aws_instance.db3.id
   vpc      = true
 }
-
-/*
-module "db2" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "2.16.0"
-  ami = "ami-0502e817a62226e03"
-  name = "db2"
-  instance_count = 1
-  instance_type = "t2.nano"
-  key_name = var.key_name
-  vpc_security_group_ids = [ module.vpc_config.mongodb_sg,module.vpc_config.ssh_sg ]
-  subnet_id = module.vpc_config.private_subnets_id[1]
-  tags = {
-    Name   = "DB2"
-  }
-}
-*/
-
-
-/*
-module "db3" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "2.16.0"
-  ami = "ami-0502e817a62226e03"
-  name = "db3"
-  instance_count = 1
-  instance_type = "t2.nano"
-  key_name = var.key_name
-  vpc_security_group_ids = [ module.vpc_config.mongodb_sg,module.vpc_config.ssh_sg ]
-  subnet_id = module.vpc_config.private_subnets_id[2]
-  tags = {
-    Name   = "DB3"
-  }
-}
-*/

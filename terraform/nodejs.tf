@@ -3,8 +3,9 @@ resource "aws_launch_configuration" "nodejs_lc" {
   image_id = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   security_groups = [ module.vpc_config.nodejs_sg, module.vpc_config.ssh_sg ]
-  associate_public_ip_address = true
+  #associate_public_ip_address = true
   key_name = aws_key_pair.server_key.key_name
+  user_data = "${base64encode(file("user-data/nodejs-user-data.sh"))}"
   lifecycle {
     create_before_destroy = true
   }

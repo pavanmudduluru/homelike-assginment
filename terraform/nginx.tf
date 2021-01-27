@@ -3,7 +3,8 @@ resource "aws_launch_configuration" "nginx_lc" {
   image_id = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   security_groups = [ module.vpc_config.nginx_sg, module.vpc_config.ssh_sg ]
-  associate_public_ip_address = true
+  #associate_public_ip_address = true
+  user_data = "${base64encode(file("user-data/nginx-user-data.sh"))}"
   key_name = aws_key_pair.server_key.key_name
   lifecycle {
     create_before_destroy = true
@@ -16,7 +17,7 @@ resource "aws_autoscaling_group" "nginx_asg" {
   max_size             = 2
   health_check_type    = "ELB"
   launch_configuration = aws_launch_configuration.nginx_lc.name
-  vpc_zone_identifier = module.vpc_config.public_subnets_id
+  vpc_zone_identifier = module.vpc_config.private_subnets_id
   target_group_arns = [aws_alb_target_group.nginx_target_group.arn]
   lifecycle {
     create_before_destroy = true
@@ -25,12 +26,7 @@ resource "aws_autoscaling_group" "nginx_asg" {
     key = "Name"
     value = "${var.webserver}-server"
     propagate_at_launch = true
-  },
-  {
-    key = "Tier"
-    value = "webserver"
-    propagate_at_launch = true
-  } ]
+  }]
 
 }
 

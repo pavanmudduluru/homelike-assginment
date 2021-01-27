@@ -1,0 +1,17 @@
+- hosts: localhost
+  tasks:
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: latest
+        update_cache: yes
+    - name: Install npm
+      apt:
+        name: npm
+        state: latest
+    - name: Create a sample application
+      template:
+        src: templates/app.js.j2
+        dest: /home/ubuntu/app.js
+    - name: Run node app
+      shell: node /home/ubuntu/app.js
