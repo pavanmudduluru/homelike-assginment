@@ -12,7 +12,8 @@ target_group_path = "/"
 alb_listener_port = 80
 alb_listener_protocol = "HTTP"
 
-#### Key Pair Name #####
+#### Key Pair Details #####
+public_key_path = "/home/pavan/.ssh/id_rsa.pub"
 key_name = "server"
 
 #### Instance Types #####
@@ -23,9 +24,7 @@ nodejs_instance_type = "t2.micro"
 local_ip = "49.206.32.92"
 
 ##### MongoDB Details ######
-mongo_ami = "ami-096b8af6e7e8fb927"
-mongo_instance_type = "t3a.medium"
-mongo_arbiter_instance_type = "t3a.medium"
+mongo_ami = "ami-0b418580298265d5c"
+mongo_instance_type = "t2.medium"
 mongo_volume_size = 30
-mongo_arbiter_volume_size = 30
 encrypt_mongo_volume = "false"

@@ -2,7 +2,7 @@ resource "aws_launch_configuration" "nodejs_lc" {
   name = "${var.frontend}-lc"
   image_id = data.aws_ami.ubuntu.id
   instance_type = var.nodejs_instance_type
-  security_groups = [ module.vpc_config.nodejs_sg, module.vpc_config.ssh_sg ]
+  security_groups = [ aws_security_group.nodejs.id, aws_security_group.ssh.id ]
   #associate_public_ip_address = true
   key_name = aws_key_pair.server_key.key_name
   user_data = base64encode(file("user-data/nodejs-user-data.sh"))
@@ -32,13 +32,13 @@ resource "aws_autoscaling_group" "nodejs_asg" {
 resource "aws_elb" "nodejs_elb" {
   name = "${var.frontend}-elb"
   internal = false
-  security_groups = [ module.vpc_config.elb_sg ]
+  security_groups = [ aws_security_group.elb.id ]
   subnets = module.vpc_config.private_subnets_id
   cross_zone_load_balancing = true
 
   health_check {
     healthy_threshold   = 10
-    unhealthy_threshold = 2   
+    unhealthy_threshold = 5
     timeout             = 5   
     interval            = 30 
     target = "HTTP:3000/"

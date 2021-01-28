@@ -2,7 +2,7 @@ resource "aws_launch_configuration" "nginx_lc" {
   name = "${var.webserver}-lc"
   image_id = data.aws_ami.ubuntu.id
   instance_type = var.nginx_instance_type
-  security_groups = [ module.vpc_config.nginx_sg, module.vpc_config.ssh_sg ]
+  security_groups = [ aws_security_group.nginx.id, aws_security_group.ssh.id ]
   #associate_public_ip_address = true
   user_data = base64encode(file("user-data/nginx-user-data.sh"))
   key_name = aws_key_pair.server_key.key_name
@@ -34,7 +34,7 @@ resource "aws_alb" "nginx_alb" {
   name = "${var.webserver}-alb"
   internal = false
   load_balancer_type = "application"
-  security_groups = [ module.vpc_config.alb_sg ]
+  security_groups = [ aws_security_group.alb.id ]
   subnets = module.vpc_config.public_subnets_id
   tags = {    
     Name = "${var.webserver}-alb" 
@@ -49,16 +49,6 @@ resource "aws_alb_target_group" "nginx_target_group" {
   tags = {    
     Name = "${var.webserver}-tg"   
   }
-  /*
-  health_check {    
-    healthy_threshold   = 5
-    unhealthy_threshold = 2   
-    timeout             = 5    
-    interval            = 30   
-    path                = var.target_group_path  
-    port                = var.target_group_port 
-  }
-  */
 }
 
 resource "aws_alb_listener" "alb_listener" {  

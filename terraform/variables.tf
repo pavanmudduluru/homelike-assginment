@@ -18,6 +18,11 @@ variable "vpc_cidr" {
   description = "The CIDR block of the vpc"
 }
 
+variable "public_key_path" {
+  description = "The path of the public key file to use"
+  default     = "/home/pavan/.ssh/id_rsa.pub"
+}
+
 variable "key_name" {
   description = "Name of the Key for servers"
 }
@@ -63,16 +68,8 @@ variable "mongo_instance_type" {
   description = "Type of instance to use for mongodb nodes"
 }
 
-variable "mongo_arbiter_instance_type" {
-  description = "Type of instance to use for mongodb arbiter node"
-}
-
 variable "mongo_volume_size" {
   description = "Size in GB of the mongodb volume"
-}
-
-variable "mongo_arbiter_volume_size" {
-  description = "Size in GB of the mongodb volume for arbiter"
 }
 
 variable "encrypt_mongo_volume" {
