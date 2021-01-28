@@ -9,7 +9,7 @@ Configuration Management - Ansible 2.10.4
 ### What will be deployed
 
 - Region
-    Frankfurt (eu-central-1)
+   - Frankfurt (eu-central-1)
 - Networking
    - 1 VPC
    - 1 Internet Gateway
@@ -99,7 +99,6 @@ Get the following details from AWS and update in `hosts.yaml`
 - `host_ip`: The public IP of your host. Example: 52.29.21.17
 - `host_private_ip`: The public IP of your host. Example: 10.0.20.241
 - `public_dns`: Update the public DNS as hosts. Example: ec2-52-29-21-17.eu-central-1.compute.amazonaws.com
-- 
 
 ```
 $ cd <repo>/ansible/mongodb
