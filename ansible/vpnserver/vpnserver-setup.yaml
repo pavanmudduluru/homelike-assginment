@@ -1,0 +1,61 @@
+---
+- hosts: vpnserver
+  remote_user: root
+  become: yes
+  tasks:
+    - name: Add MongoDB Repository to yum repositories
+      template:
+        src: templates/mongodb-org-4.2.repo.j2
+        dest: /etc/yum.repos.d/mongodb-org-4.2.repo
+
+    - name: Add Pritunl Repository to yum repositories
+      template:
+        src: templates/pritunl.repo.j2
+        dest: /etc/yum.repos.d/pritunl.repo
+
+    - name: Install oracle-epel-release-el7
+      yum:
+        name: oracle-epel-release-el7
+        state: present
+
+    - name: Enable ol7_developer_epel
+      shell: yum-config-manager --enable ol7_developer_epel
+
+    - name: GPG
+      remote_user: ec2-user
+      become: yes
+      shell: gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 7568D9BB55FF9E5287D586017AE645C0CF8E292A
+
+    - name: GPG key export
+      remote_user: ec2-user
+      become: yes
+      shell: gpg --armor --export 7568D9BB55FF9E5287D586017AE645C0CF8E292A > key.tmp
+
+    - name: import a key from file
+      rpm_key:
+        state: present
+        key: key.tmp
+
+    - name: Remove key file
+      file:
+        path: key.tmp
+        state: absent
+
+    - name: remove the Apache package
+      yum:
+        name: iptables-services
+        state: absent
+
+    - name: Install pritunl & mongodb-org
+      yum:
+        name: ['pritunl' , 'mongodb-org']
+        state: present
+
+    - name: Enable and Start pritunl & mongod
+      systemd:
+        name: "{{ item }}"
+        enabled: True
+        state: started
+      with_items:
+        - "{{ mongod }}"
+        - "{{ pritunl }}"

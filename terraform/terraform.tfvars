@@ -27,4 +27,10 @@ local_ip = "49.206.32.92"
 mongo_ami = "ami-0b418580298265d5c"
 mongo_instance_type = "t2.medium"
 mongo_volume_size = 30
-encrypt_mongo_volume = "false"
+encrypt_mongo_volume = "true"
+
+##### VPN Server #######
+vpnserver_ami = "ami-0a574c907cab224f9"
+vpnserver_instance_type = "t2.micro"
+vpnserver_volume_size = 10
+encrypt_vpnserver_volume = "true"

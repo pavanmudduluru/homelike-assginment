@@ -61,7 +61,7 @@ variable "local_ip" {
 }
 
 variable "mongo_ami" {
-  description = "The AMI to use. Be Carreful. Only Ubuntu 18.04 has been tested"
+  description = "Using Ubuntu 18.04"
 }
 
 variable "mongo_instance_type" {
@@ -73,5 +73,21 @@ variable "mongo_volume_size" {
 }
 
 variable "encrypt_mongo_volume" {
-  description = "Define whereas the mongodb volume needs to be encrypted. If true ansible deployment can skip 'encrypt-rest' plays"
+  description = "Define whereas the mongodb volume needs to be encrypted"
+}
+
+variable "vpnserver_ami" {
+  description = "Using Oracle linux"
+}
+
+variable "vpnserver_instance_type" {
+  description = "Type of instance to use for vpnserver"
+}
+
+variable "vpnserver_volume_size" {
+  description = "Size in GB of the vpnserver volume"
+}
+
+variable "encrypt_vpnserver_volume" {
+  description = "Enabling encryption"
 }

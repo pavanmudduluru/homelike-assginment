@@ -154,6 +154,13 @@ resource "aws_security_group" "mongodb" {
     security_groups = [aws_security_group.nodejs.id]
   }
 
+  ingress {
+    from_port   = 27017
+    to_port     = 27017
+    protocol    = "tcp"
+    cidr_blocks = local.trusted_vpn
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -163,5 +170,48 @@ resource "aws_security_group" "mongodb" {
 
   tags = {
     Name = "mongodb"
+  }
+}
+
+resource "aws_security_group" "vpnserver" {
+  name        = "vpnserver"
+  vpc_id = module.vpc_config.vpc_id
+  depends_on  = [module.vpc_config.vpc]
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.local_ip}/32"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 18681
+    to_port     = 18681
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "vpnserver"
   }
 }
