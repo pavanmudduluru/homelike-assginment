@@ -1,10 +1,10 @@
-# homelike-assginment
+# Nginx-Nodejs-MondoDB
 
 ## Tools Used
 
-Cloud Provider - AWS
-Infrastructure - Terraform v0.14.5
-Configuration Management - Ansible 2.10.4
+Cloud Provider - AWS  
+Infrastructure - Terraform v0.14.5  
+Configuration Management - Ansible 2.10.4  
 
 ### What will be deployed
 
